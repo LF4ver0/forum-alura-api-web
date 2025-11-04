@@ -28,4 +28,5 @@ class SecurityConfiguration(
 
     @Bean
     fun encoder(): PasswordEncoder = BCryptPasswordEncoder()
+    /*Aula 1 de configuração de autenticação*/
 }
