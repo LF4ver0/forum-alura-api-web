@@ -19,7 +19,7 @@ class RespostasService(
     private val respostaFormMapper: RespostaFormMapper,
     private val respostaViewMapper: RespostaViewMapper
 ) {
-    init {
+/*    init {
         val curso = Curso(
             id = 1,
             nome = "Kotlin",
@@ -56,7 +56,7 @@ class RespostasService(
 
         respostas = Arrays.asList(resposta, resposta2)
     }
-
+*/
     fun listarRespostasPorTopico(idTopico: Long): List<Resposta> {
         return respostas.filter { it.topico.id == idTopico }
     }
