@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 
 @Entity
@@ -19,6 +20,6 @@ data class Usuario(
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "usuario_role")
+    @JoinTable(name = "usuario_role")
     val role: List<Role> = mutableListOf()
 )

@@ -1,0 +1,27 @@
+server:
+  port: 8080
+spring:
+  config:
+    activate:
+      on-profile: dev
+  application:
+    name: forum
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:forum
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+  flyway:
+    enable: true
+jwt:
+  secret: 3dxm5X+E5Nf2Kq2Q8FzJh5Zq8nETTQq36o6/8HRG6Uc=
