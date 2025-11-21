@@ -1,6 +1,8 @@
 package br.com.alura.forum.model
 
+import br.com.alura.forum.enum.StatusTopico
 import jakarta.persistence.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -20,5 +22,7 @@ data class Topico(
     val status: StatusTopico = StatusTopico.NAO_RESPONDIDO,
 
     @OneToMany(mappedBy = "topico")
-    val respostas: List<Resposta> = ArrayList()
+    val respostas: List<Resposta> = ArrayList(),
+
+    var dataAlteracao: LocalDate? = null
 )

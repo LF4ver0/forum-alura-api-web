@@ -1,4 +1,4 @@
-package br.com.alura.forum.model
+package br.com.alura.forum.enum
 
 enum class StatusTopico {
     NAO_RESPONDIDO,
