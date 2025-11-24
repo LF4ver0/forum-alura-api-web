@@ -36,9 +36,10 @@ class TopicoService(
 */
 
     //Forma Moderna no Kotlin
-    fun listar(nomeCurso: String?, paginacao: Pageable): Page<TopicoView> =
-        (nomeCurso?.let {repository.findByCursoNome(it, paginacao)} ?: repository.findAll(paginacao))
-            .map(topicoViewMapper::map)
+    fun listar(nomeCurso: String?,
+               paginacao: Pageable): Page<TopicoView> =
+    (nomeCurso?.let {repository.findByCursoNome(it, paginacao)}
+        ?: repository.findAll(paginacao)).map(topicoViewMapper::map)
 
 
     fun buscarPorId(id: Long): TopicoView {
