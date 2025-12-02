@@ -43,19 +43,32 @@ class SecurityConfiguration(
         return http
             .csrf { it.disable() }
             .authorizeHttpRequests {
+                it.requestMatchers(
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/swagger-resources/**",
+                    "/webjars/**"
+                ).permitAll()
+
                 it.requestMatchers(HttpMethod.POST,"/login").permitAll()
                 it.requestMatchers("/topicos").hasAuthority("LEITURA_ESCRITA")
                 it.anyRequest().authenticated()
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }.httpBasic(Customizer.withDefaults())
+            }
+            .httpBasic(Customizer.withDefaults())
 
-            .addFilterBefore(
+            // 🔥 IMPORTANTE: ambos os filtros executam DEPOIS
+            .addFilterAfter(
                 JWTLoginFilter(authenticationManager, jwtUtil),
                 UsernamePasswordAuthenticationFilter::class.java
             )
-            .addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterAfter(
+                JWTAuthenticationFilter(jwtUtil),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
+
             .build()
     }
 }

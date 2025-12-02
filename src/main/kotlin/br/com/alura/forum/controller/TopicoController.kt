@@ -5,6 +5,7 @@ import br.com.alura.forum.dto.form.AtualizacaoTopicoForm
 import br.com.alura.forum.dto.form.NovoTopicoForm
 import br.com.alura.forum.dto.view.TopicoView
 import br.com.alura.forum.service.TopicoService
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.cache.annotation.CacheEvict
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/topicos")
 class TopicoController(private val service: TopicoService) {
 
