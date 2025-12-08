@@ -23,5 +23,19 @@ spring:
     port: 6379
   flyway:
     enable: true
+  mail:
+    host:
+    port:
+    username:
+    password:
+    properties:
+      mail:
+        transport:
+          protocol:
+        debug:
+          smt:
+            auth:
+            starttls:
+              enable:
 jwt:
   secret: 3dxm5X+E5Nf2Kq2Q8FzJh5Zq8nETTQq36o6/8HRG6Uc=

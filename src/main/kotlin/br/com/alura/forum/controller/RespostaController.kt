@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@RequestMapping("/topicos/{id}/respostas")
+@RestController
+@RequestMapping("/respostas")
 class RespostasController(private val service: RespostasService) {
 
     @GetMapping
@@ -18,7 +19,7 @@ class RespostasController(private val service: RespostasService) {
         return this.service.listarRespostasPorTopico(id)
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     fun cadastrar(@PathVariable id: Long, @RequestBody @Valid dto: RespostaForm) {
         service.cadastrarResposta(id, dto)
     }

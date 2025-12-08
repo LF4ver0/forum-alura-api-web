@@ -51,7 +51,8 @@ class SecurityConfiguration(
                 ).permitAll()
 
                 it.requestMatchers(HttpMethod.POST,"/login").permitAll()
-                it.requestMatchers("/topicos").hasAuthority("LEITURA_ESCRITA")
+                it.requestMatchers("/topicos")?.hasAuthority("LEITURA_ESCRITA")
+                it.requestMatchers("/respostas")?.hasAuthority("LEITURA_ESCRITA")
                 it.anyRequest().authenticated()
             }
             .sessionManagement {

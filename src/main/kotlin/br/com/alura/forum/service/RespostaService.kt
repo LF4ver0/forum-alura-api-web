@@ -5,31 +5,27 @@ import br.com.alura.forum.dto.form.RespostaForm
 import br.com.alura.forum.dto.view.RespostaView
 import br.com.alura.forum.mapper.RespostaFormMapper
 import br.com.alura.forum.mapper.RespostaViewMapper
-import br.com.alura.forum.model.Curso
 import br.com.alura.forum.model.Resposta
-import br.com.alura.forum.model.Topico
-import br.com.alura.forum.model.Usuario
+import br.com.alura.forum.repository.RespostaRepository
 import org.springframework.stereotype.Service
-import java.util.Arrays
 
 @Service
 class RespostasService(
     private var respostas: List<Resposta>,
     private val topicoService: TopicoService,
     private val respostaFormMapper: RespostaFormMapper,
-    private val respostaViewMapper: RespostaViewMapper
+    private val respostaViewMapper: RespostaViewMapper,
+    private val respostaRepository: RespostaRepository
 ) {
     fun listarRespostasPorTopico(idTopico: Long): List<Resposta> {
         return respostas.filter { it.topico.id == idTopico }
     }
 
-
     fun cadastrarResposta(idTopico: Long, form: RespostaForm) {
         val novaResposta = respostaFormMapper.map(form).apply {
-            id = respostas.size.toLong() + 1
             topico = topicoService.obterTopico(idTopico)
         }
-        respostas += novaResposta
+        respostaRepository.save(novaResposta)
     }
 
     fun atualizar(form: AtualizacaoRespostaForm): RespostaView {
@@ -50,6 +46,5 @@ class RespostasService(
             ?: throw NoSuchElementException("Resposta com Id ${id} não Encontrada !")
         respostas = respostas.minus(resposta)
     }
-
 
 }
