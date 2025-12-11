@@ -15,7 +15,8 @@ class RespostasService(
     private val topicoService: TopicoService,
     private val respostaFormMapper: RespostaFormMapper,
     private val respostaViewMapper: RespostaViewMapper,
-    private val respostaRepository: RespostaRepository
+    private val respostaRepository: RespostaRepository,
+    private val emailService: EmailService
 ) {
     fun listarRespostasPorTopico(idTopico: Long): List<Resposta> {
         return respostas.filter { it.topico.id == idTopico }
@@ -26,6 +27,9 @@ class RespostasService(
             topico = topicoService.obterTopico(idTopico)
         }
         respostaRepository.save(novaResposta)
+        val emailAutor = novaResposta.topico.autor?.email
+
+        emailService.notificar(emailAutor.toString())
     }
 
     fun atualizar(form: AtualizacaoRespostaForm): RespostaView {
