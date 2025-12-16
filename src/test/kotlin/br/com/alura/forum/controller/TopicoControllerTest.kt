@@ -1,6 +1,7 @@
 package br.com.alura.forum.controller
 
 import br.com.alura.forum.config.JWTUtil
+import br.com.alura.forum.configuration.DatabaseContainerConfiguration
 import br.com.alura.forum.model.Role
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,30 +13,33 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+import org.testcontainers.junit.jupiter.Testcontainers
 
+@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TopicoControllerTest {
+class TopicoControllerTest : DatabaseContainerConfiguration() {
 
     @Autowired
-    private lateinit var webApplication : WebApplicationContext
+    private lateinit var webApplicationContext: WebApplicationContext
 
     @Autowired
     private lateinit var jwtUtil: JWTUtil
 
     private lateinit var mockMvc: MockMvc
 
-    private var token: String? = null
+    private var jwt: String? = null
 
-    companion object{
-        private const val RECURSO = "/topicos"
-        private const val RECURSO_ID = RECURSO.plus("/%s")
+    companion object {
+        private const val TOKEN = "%s"
+        private const val URI = "/topicos"
+        private const val URI_WITH_PARAM = URI.plus("/%s")
     }
 
     @BeforeEach
     fun setup() {
-        token = gerarToken()
+        jwt = gerarToken()
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplication)
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
            .apply<DefaultMockMvcBuilder>(
                SecurityMockMvcConfigurers.springSecurity())
            .build()
@@ -43,20 +47,21 @@ class TopicoControllerTest {
 
     @Test
     fun `deve retornar codigo 403 quando chamar topicos sem token`() {
-        mockMvc.get(RECURSO).andExpect { status { is4xxClientError() } }
+        mockMvc.get(URI).andExpect { status { is4xxClientError() } }
     }
 
     @Test
     fun `deve retornar codigo 200 quando chamar topico com token`() {
-        mockMvc.get(RECURSO) {
-            headers { token?.let {this.setBearerAuth(it) } }
-        }.andExpect { status { is2xxSuccessful() } }
+        mockMvc.get(URI) {
+            headers { jwt?.let { setBearerAuth(it) } }
+        }.andDo { print() } // <-- Adicione isso
+            .andExpect { status { is2xxSuccessful() } }
     }
 
     @Test
     fun `deve retornar codigo 200 quando chamar topico por id com token` () {
-        mockMvc.get(RECURSO_ID.format(1)) {
-            headers { token?.let { setBearerAuth(it) } }
+        mockMvc.get(URI_WITH_PARAM.format(1)) {
+            headers { jwt?.let { setBearerAuth(it) } }
         }.andExpect { status { is2xxSuccessful() } }
     }
 

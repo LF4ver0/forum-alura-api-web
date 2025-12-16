@@ -1,54 +1,25 @@
 package br.com.alura.forum.integration
 
+import br.com.alura.forum.configuration.DatabaseContainerConfiguration
 import br.com.alura.forum.dto.TopicoPorCategoriaDto
 import br.com.alura.forum.model.TopicoTest
 import br.com.alura.forum.repository.TopicoRepository
-import org.aspectj.weaver.ast.Not
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.DynamicPropertyRegistrar
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
-import org.testcontainers.containers.GenericContainer
-import org.testcontainers.containers.MySQLContainer
-import org.testcontainers.junit.jupiter.Container
+import org.springframework.data.domain.PageRequest
 import org.testcontainers.junit.jupiter.Testcontainers
 import kotlin.test.Test
 
 @Testcontainers
-@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class TopicoRepositoryTest {
+class TopicoRepositoryTest: DatabaseContainerConfiguration() {
 
     @Autowired
     private lateinit var topicoRepository: TopicoRepository
-    
-    companion object {
-        @Container
-        private val mysqlContainer = MySQLContainer<Nothing>("mysql:8.4.0").apply {
-            withDatabaseName("testedb")
-            withUsername("joao")
-            withPassword("123456")
-        }
 
-        @Container
-        private val redisContainer = GenericContainer<Nothing>("redis:latest").apply {
-            withExposedPorts(6379)
-        }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl)
-            registry.add("spring.datasource.password", mysqlContainer::getPassword)
-            registry.add("spring.datasource.username", mysqlContainer::getUsername)
-
-            registry.add("spring.redis.host", redisContainer::getHost)
-            registry.add("spring.redis.port", redisContainer::getFirstMappedPort)
-        }
-    }
+    private val paginacao = PageRequest.of(0,5)
+    private val topico = TopicoTest.build()
 
     @Test
     fun `deve gerar um relatorio`() {
